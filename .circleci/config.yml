@@ -1,6 +1,7 @@
 version: 2.1
 orbs:
   docker: circleci/docker@2.1.2
+  slack: circleci/slack@4.10.1
 jobs:
   build-docker-image:
       executor:
@@ -17,7 +18,15 @@ jobs:
               docker build -t dotnetcoreapi.azurecr.io/dotnet-api:latest .
               docker login -u $DOCKER_USER -p $DOCKER_PASS dotnetcoreapi.azurecr.io
               docker push dotnetcoreapi.azurecr.io/dotnet-api:latest
+        - slack/notify:
+            event: fail
+            template: basic_fail_1
+        - slack/notify:
+            event: pass
+            template: basic_success_1
 workflows:
   build-and-deploy:
     jobs:
-      - build-docker-image
+      - build-docker-image:
+          context:
+            - slack-secrets
