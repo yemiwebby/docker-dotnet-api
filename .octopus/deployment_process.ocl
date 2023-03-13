@@ -27,7 +27,7 @@ step "deploy-to-iis" {
             Octopus.Action.IISWebSite.WebApplication.ApplicationPoolIdentityType = "ApplicationPoolIdentity"
             Octopus.Action.IISWebSite.WebApplication.ApplicationPoolName = "WeatherApi"
             Octopus.Action.IISWebSite.WebApplication.CreateOrUpdate = "True"
-            Octopus.Action.IISWebSite.WebApplication.VirtualPath = "/WeatherAPI"
+            Octopus.Action.IISWebSite.WebApplication.VirtualPath = "/weather"
             Octopus.Action.IISWebSite.WebApplication.WebSiteName = "Default Web Site"
             Octopus.Action.IISWebSite.WebRootType = "packageRoot"
             Octopus.Action.IISWebSite.WebSiteName = "WeatherSite"
@@ -36,6 +36,7 @@ step "deploy-to-iis" {
             Octopus.Action.Package.DownloadOnTentacle = "False"
             Octopus.Action.Package.FeedId = "octopus-server-built-in"
             Octopus.Action.Package.PackageId = "docker-dotnet-api"
+            Octopus.Action.WebApplication.WebRootType = "packageRoot"
         }
         worker_pool_variable = ""
 
