@@ -42,12 +42,13 @@ jobs:
           server: ${{ secrets.OCTOPUSSERVERURL }}
           packages: "artifacts/NStankov.Weather.Api.${{ env.PACKAGE_VERSION }}.zip"
           space: ${{ secrets.OCTOPUSSERVER_SPACE }}
-      - name: Create and deploy release
-        uses: OctopusDeploy/create-release-action@v1.1.1
-        with:
-          api_key: ${{ secrets.OCTOPUSSERVERAPIKEY }}
-          server: ${{ secrets.OCTOPUSSERVERURL }}
-          space: ${{ secrets.OCTOPUSSERVER_SPACE }}
-          project: "Octo Weather Api"
-          deploy_to: "Development"
-          progress: false
+          ##TODO HOOK REPO AND PROJECT TOGETHER!
+      # - name: Create and deploy release
+      #   uses: OctopusDeploy/create-release-action@v1.1.1
+      #   with:
+      #     api_key: ${{ secrets.OCTOPUSSERVERAPIKEY }}
+      #     server: ${{ secrets.OCTOPUSSERVERURL }}
+      #     space: ${{ secrets.OCTOPUSSERVER_SPACE }}
+      #     project: "Octo Weather Api"
+      #     deploy_to: "Development"
+      #     progress: false
