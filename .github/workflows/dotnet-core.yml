@@ -50,4 +50,4 @@ jobs:
           space: ${{ secrets.OCTOPUSSERVER_SPACE }}
           project: "Octo Weather Api"
           deploy_to: "Development"
-          progress: true
+          progress: false
