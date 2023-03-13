@@ -2,7 +2,7 @@ name: .NET Core
 
 on:
   push:
-    branches: [main]
+    branches: [master]
 
 jobs:
   build:
@@ -25,23 +25,23 @@ jobs:
       - name: Create artifacts folder
         run: |
           mkdir "$GITHUB_WORKSPACE/artifacts"
-          mkdir "$GITHUB_WORKSPACE/artifacts/docker-dotnet-api"
+          mkdir "$GITHUB_WORKSPACE/artifacts/NStankov.Weather.Api"
 
       - name: Publish WeatherApi
-        run: dotnet publish docker-dotnet-api.csproj --configuration Release --no-restore --output "$GITHUB_WORKSPACE/artifacts/docker-dotnet-api"
+        run: dotnet publish docker-dotnet-api.csproj --configuration Release --no-restore --output "$GITHUB_WORKSPACE/artifacts/NStankov.Weather.Api"
       - name: Install Octopus CLI
         uses: OctopusDeploy/install-octopus-cli-action@v1.1.6
         with:
           version: latest
-      - name: Package docker-dotnet-api
+      - name: Package NStankov.Weather.Api
         run: |
-          octo pack --id="docker-dotnet-api" --format="Zip" --version="$PACKAGE_VERSION" --basePath="$GITHUB_WORKSPACE/artifacts/docker-dotnet-api" --outFolder="$GITHUB_WORKSPACE/artifacts"
-      - name: Push docker-dotnet-api packages
+          octo pack --id="NStankov.Weather.Api" --format="Zip" --version="$PACKAGE_VERSION" --basePath="$GITHUB_WORKSPACE/artifacts/NStankov.Weather.Api" --outFolder="$GITHUB_WORKSPACE/artifacts"
+      - name: Push NStankov.Weather.Api packages
         uses: OctopusDeploy/push-package-action@v1.1.1
         with:
           api_key: ${{ secrets.OCTOPUSSERVERAPIKEY }}
           server: ${{ secrets.OCTOPUSSERVERURL }}
-          packages: "artifacts/docker-dotnet-api.${{ env.PACKAGE_VERSION }}.zip"
+          packages: "artifacts/NStankov.Weather.Api.${{ env.PACKAGE_VERSION }}.zip"
           space: ${{ secrets.OCTOPUSSERVER_SPACE }}
       - name: Create and deploy release
         uses: OctopusDeploy/create-release-action@v1.1.1
