@@ -26,7 +26,6 @@ jobs:
         run: |
           mkdir "$GITHUB_WORKSPACE/artifacts"
           mkdir "$GITHUB_WORKSPACE/artifacts/NStankov.Weather.Api"
-
       - name: Publish WeatherApi
         run: dotnet publish docker-dotnet-api.csproj --configuration Release --no-restore --output "$GITHUB_WORKSPACE/artifacts/NStankov.Weather.Api"
       - name: Install Octopus CLI
