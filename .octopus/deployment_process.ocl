@@ -36,7 +36,7 @@ step "deploy-to-iis" {
             Octopus.Action.Package.DownloadOnTentacle = "False"
             Octopus.Action.Package.FeedId = "octopus-server-built-in"
             Octopus.Action.Package.JsonConfigurationVariablesTargets = "appsettings.json"
-            Octopus.Action.Package.PackageId = "docker-dotnet-api"
+            Octopus.Action.Package.PackageId = "NStankov.Weather.Api"
             Octopus.Action.WebApplication.WebRootType = "packageRoot"
         }
         worker_pool_variable = ""
@@ -44,7 +44,7 @@ step "deploy-to-iis" {
         packages {
             acquisition_location = "Server"
             feed = "octopus-server-built-in"
-            package_id = "docker-dotnet-api"
+            package_id = "NStankov.Weather.Api"
             properties = {
                 SelectionMode = "immediate"
             }
