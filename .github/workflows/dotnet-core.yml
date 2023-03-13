@@ -1,0 +1,54 @@
+name: .NET Core
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set Version
+        run: echo "PACKAGE_VERSION=$(date +'%Y.%m.%d').$GITHUB_RUN_NUMBER" >> $GITHUB_ENV
+      - name: Setup .NET 6
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: "6.0.x"
+      - name: Install dependencies
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --configuration Release --no-restore
+      - name: Test
+        run: dotnet test --no-restore --verbosity normal
+      - name: Create artifacts folder
+        run: |
+          mkdir "$GITHUB_WORKSPACE/artifacts"
+          mkdir "$GITHUB_WORKSPACE/artifacts/docker-dotnet-api"
+
+      - name: Publish WeatherApi
+        run: dotnet publish docker-dotnet-api.csproj --configuration Release --no-restore --output "$GITHUB_WORKSPACE/artifacts/docker-dotnet-api"
+      - name: Install Octopus CLI
+        uses: OctopusDeploy/install-octopus-cli-action@v1.1.6
+        with:
+          version: latest
+      - name: Package docker-dotnet-api
+        run: |
+          octo pack --id="docker-dotnet-api" --format="Zip" --version="$PACKAGE_VERSION" --basePath="$GITHUB_WORKSPACE/artifacts/docker-dotnet-api" --outFolder="$GITHUB_WORKSPACE/artifacts"
+      - name: Push docker-dotnet-api packages
+        uses: OctopusDeploy/push-package-action@v1.1.1
+        with:
+          api_key: ${{ secrets.OCTOPUSSERVERAPIKEY }}
+          server: ${{ secrets.OCTOPUSSERVERURL }}
+          packages: "artifacts/docker-dotnet-api.${{ env.PACKAGE_VERSION }}.zip"
+          space: ${{ secrets.OCTOPUSSERVER_SPACE }}
+      - name: Create and deploy release
+        uses: OctopusDeploy/create-release-action@v1.1.1
+        with:
+          api_key: ${{ secrets.OCTOPUSSERVERAPIKEY }}
+          server: ${{ secrets.OCTOPUSSERVERURL }}
+          space: ${{ secrets.OCTOPUSSERVER_SPACE }}
+          project: "Octo Weather Api"
+          deploy_to: "Development"
+          progress: true
